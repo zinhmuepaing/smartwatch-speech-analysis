@@ -1,0 +1,16 @@
+# Ignore large dataset directories
+FITS_ Parents Data/
+New Dataset/
+
+# Ignore generated report and temporary files
+analysis_plan_report.pdf
+*.pyc
+__pycache__/
+*.log
+
+# Jupyter notebooks can be excluded if not part of code deliverable
+Untitled-1.ipynb
+
+# OS and editor files
+.DS_Store
+Thumbs.db
