@@ -1,170 +1,68 @@
-AUDIO ANALYSIS PIPELINE – README
-===============================
+# Smartwatch Speech Analytics for Autistic Students
 
-There are 2 scripts in this parent folder: fix_srt_timestamps.py and Final Analysis Code.py
+## Project overview
+This project analyzes smartwatch speech data collected from students with autism spectrum disorder. The watch records speech transcriptions, pitch measurements, and volume measurements from a Bluetooth lapel microphone. The main goal is to evaluate polite speech usage and identify when volume or pitch thresholds trigger alerts.
 
-fix_srt_timestamps.py was only required for FITS_Parents Data since the original .srt files had their timestamps formatted in a way that pysrt could not read, so running it corrects it.
+## Deliverables
+1. Count the number of target empathetic keywords in each student transcript.
+2. Count how many times each student exceeded the volume and pitch thresholds that triggered alarms.
+3. Analyze whether students improved over time by looking at session trends.
+4. Calculate the mean and standard deviation for pitch and volume for each student.
+5. Produce a descriptive report summarizing findings and recommendations.
 
-Final Analysis Code.py is the script that does the analysis and generates reports. Details for this script is as follows:
+## Codebase review
+The current workspace contains two main scripts:
 
-OVERVIEW
---------
-This script performs automated analysis of speech audio files (.wav) to detect
-statistically unusual behavior in:
+### Final Analysis Code.py
 
-- Pitch (fundamental frequency)
-- Loudness (RMS energy)
+- Main analysis engine.
+-Recursively discovers .wav files.
+- Ensures .srt transcripts exist, generating them with Whisper if needed.
+- Splits long audio into 15-minute chunks.
+- Extracts:
+1. pitch via parselmouth
+2. loudness (RMS) via librosa
+- Detects anomalies using chunk-level z-scores.
+- Counts keyword hits from .srt subtitles.
+- Writes per-file <name>_analysis.txt and <name>_analysis.pdf.
 
-It also scans subtitle (.srt) files for specific keywords and produces:
+### fix_srt_timestamps.py
 
-1. A detailed text report
-2. A PDF containing diagnostic plots
+- Auxiliary script for broken .srt timestamps.
+- Not part of the main analytics pipeline, only needed for corrupted files.
 
-The system is designed to handle long recordings efficiently using chunking
-and multiprocessing.
+## What the existing script already covers
+- It finds `.wav` audio files and processes them automatically.
+- It ensures `.srt` transcripts are available, generating them with Whisper if needed.
+- It computes pitch using `parselmouth` and volume proxy using `librosa` RMS.
+- It flags anomalous pitch and volume events using z-score thresholds.
+- It counts target keywords from subtitle files.
+- It generates per-session text reports and diagnostic PDFs.
 
+## What the existing script does not fully provide yet
+- It does not aggregate results across multiple sessions for the same student.
+- It does not create a structured summary table for student-level analytics.
+- It does not perform longitudinal trend analysis over time.
+- It does not explicitly extract student IDs and session dates for grouping.
+- It does not generate a final descriptive report with personalized threshold recommendations.
 
-WHAT THE SCRIPT DOES (HIGH LEVEL)
----------------------------------
-For each .wav file found in the directory tree:
+## Current Plans Considered
+1. Keep the current audio and subtitle processing pipeline for pitch, volume, and keyword detection.
+2. Add a structured data layer using `pandas` to save one row per session.
+3. Use that session table to compare sessions, group by student, and analyze trends.
+4. Calculate per-student mean and standard deviation for pitch and volume.
+5. Recommend personalized alarm thresholds based on each student�s own baseline.
+6. Use plots and summary metrics to show improvement or changes over time.
 
-1. Ensures a subtitle (.srt) file exists
-   - If missing, it is automatically generated using Whisper
-2. Splits the audio into fixed-length chunks
-3. Processes chunks in parallel:
-   - Extracts pitch and loudness features
-   - Computes statistical baselines
-   - Detects anomalies using z-scores
-   - Searches subtitles for keywords
-   - Generates plots
-4. Aggregates results into:
-   - One text report (.txt)
-   - One PDF with plots (.pdf)
-5. Cleans up temporary chunk files
+## Planned next steps
+- I will add more polite keyword variants beyond `['??', '??', '??']` because the current list is limited.
+- I will create a summary table with columns such as `student_id`, `session_id`, `session_date`, `keyword_count`, `pitch_alarm_count`, `volume_alarm_count`, `pitch_mean`, `pitch_std`, `volume_mean`, `volume_std`, and `duration_sec`.
+- I will perform per-student aggregation so we can compare different sessions for the same student.
+- I will analyze improvement by sorting sessions by date and checking whether undesirable speech events decrease over time.
+- I will calculate per-student baselines so future alarm thresholds can be personalized rather than fixed.
 
-
-INPUTS
-------
-- One or more `.wav` audio files
-- Optional `.srt` subtitle files in the same directory
-
-If no `.srt` is found, one will be generated automatically.
-
-
-OUTPUT FILES
-------------
-For each input audio file `<name>.wav`, the script produces:
-
-1. `<name>_analysis.txt`
-   - Per-chunk logs
-   - Detected pitch and volume anomalies
-   - Global statistics (mean, std)
-   - Keyword detection results
-
-2. `<name>_analysis.pdf`
-   - Time-series plots of pitch and RMS
-   - Threshold lines
-   - Highlighted anomalous regions
-
-
-KEY CONCEPTS
-------------
-
-Pitch (F0):
-- Extracted using Praat via the parselmouth library
-- Unvoiced frames are ignored (treated as NaN)
-- Statistics are computed only on voiced frames
-
-Loudness:
-- Approximated using RMS energy
-- Computed on short overlapping frames
-
-Windowing:
-- Features are averaged over fixed-length time windows
-- This reduces noise and false positives
-
-Anomaly Detection:
-- Uses z-scores:
-      z = (value - mean) / standard_deviation
-- A window is flagged if its z-score exceeds a threshold
-
-Thresholds:
-- Pitch: 2.0 standard deviations above mean
-- RMS:   1.5 standard deviations above mean
-
-These values assume roughly normal distributions and can be adjusted.
+## Keywords to consider adding
+- more polite phrases in Cantonese and Chinese such as thank-you expressions, appreciation phrases, and polite request phrases.
+- if the boss approves, I will expand the keyword list to capture more empathetic speech.
 
 
-DIRECTORY STRUCTURE
--------------------
-The script recursively searches from its own directory:
-
-.
-├── analyze_audio.py
-├── README.txt
-├── audio1.wav
-├── audio1.srt
-├── audio2.wav
-└── subfolder/
-    └── audio3.wav
-
-
-HOW TO RUN
-----------
-1. Install dependencies (see below)
-2. Place `.wav` files in the same directory or subdirectories
-3. Run:
-
-    python analyze_audio.py
-
-The script will automatically discover files and begin processing.
-
-
-DEPENDENCIES
-------------
-Python 3.9+ recommended.
-
-Required packages:
-- numpy
-- librosa
-- soundfile
-- matplotlib
-- pysrt
-- parselmouth
-- whisper (openai-whisper)
-
-Example installation:
-
-    pip install numpy librosa soundfile matplotlib pysrt praat-parselmouth openai-whisper
-
-
-MULTIPROCESSING NOTES
----------------------
-- The script uses half of available CPU cores by default so that it can run in the background if necessary
-- Matplotlib runs in a non-GUI backend for Windows compatibility
-- Temporary chunk files are written to disk and deleted afterward
-
-
-CUSTOMIZATION
--------------
-Key parameters can be adjusted at the top of the script:
-
-- FRAME_LENGTH / HOP_LENGTH
-- ANOMALY_WINDOW_SECONDS
-- PITCH_Z_THRESHOLD
-- VOLUME_Z_THRESHOLD
-- CHUNK_LENGTH_SECONDS
-- KEYWORDS_TO_FIND
-
-These allow tuning for different speaking styles, recording conditions,
-or analysis goals.
-
-
-LIMITATIONS
------------
-- Assumes relatively clean speech audio
-- Z-score thresholds assume roughly unimodal distributions
-- Pitch extraction may degrade with heavy noise or music
-
-
-End of README.
