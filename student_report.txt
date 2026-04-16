@@ -1,0 +1,142 @@
+SMARTWATCH SPEECH ANALYTICS — STUDENT SUMMARY REPORT
+Generated from 25 sessions across 5 students
+
+================================================================================
+Student: Unknown  (Device ID: 862177071034204)
+================================================================================
+Sessions analysed : 2
+Date range        : 2026-01-22  →  2026-01-23
+
+── Baseline Statistics ──────────────────────────────────────────────────────
+  Pitch  : mean =  252.72 Hz    std =  75.95 Hz
+  Volume : mean =  0.015230    std =  0.014861
+
+── Personalized Alarm Thresholds ────────────────────────────────────────────
+  Pitch  threshold :  404.62 Hz  (= mean + 2.0σ)
+  Volume threshold :  0.037522  (= mean + 1.5σ)
+
+── Longitudinal Trends ──────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per session)
+  Pitch alarm count     : ↓ improving     (avg 49.5 per session)
+  Volume alarm count    : ↓ improving     (avg 150.0 per session)
+
+── Session-by-Session Detail ────────────────────────────────────────────────
+  Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  -----------------------------------------------------------------------------------
+  2026-01-22   155325           0            76         225           252.10   0.015989
+  2026-01-23   081753           0            23          75           253.34   0.014472
+
+================================================================================
+Student: 何厚智  (Device ID: 862177071070679)
+================================================================================
+Sessions analysed : 1
+Date range        : 2026-01-26  →  2026-01-26
+
+── Baseline Statistics ──────────────────────────────────────────────────────
+  Pitch  : mean =  220.39 Hz    std =  82.78 Hz
+  Volume : mean =  0.078809    std =  0.116998
+
+── Personalized Alarm Thresholds ────────────────────────────────────────────
+  Pitch  threshold :  385.95 Hz  (= mean + 2.0σ)
+  Volume threshold :  0.254307  (= mean + 1.5σ)
+
+── Longitudinal Trends ──────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per session)
+  Pitch alarm count     : → stable        (avg 50.0 per session)
+  Volume alarm count    : → stable        (avg 165.0 per session)
+
+── Session-by-Session Detail ────────────────────────────────────────────────
+  Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  -----------------------------------------------------------------------------------
+  2026-01-26   202904           0            50         165           220.39   0.078809
+
+================================================================================
+Student: 謝知霖  (Device ID: 862177071031192)
+================================================================================
+Sessions analysed : 6
+Date range        : 2025-12-17  →  2025-12-17
+
+── Baseline Statistics ──────────────────────────────────────────────────────
+  Pitch  : mean =  218.50 Hz    std =  76.91 Hz
+  Volume : mean =  0.042318    std =  0.075749
+
+── Personalized Alarm Thresholds ────────────────────────────────────────────
+  Pitch  threshold :  372.32 Hz  (= mean + 2.0σ)
+  Volume threshold :  0.155941  (= mean + 1.5σ)
+
+── Longitudinal Trends ──────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per session)
+  Pitch alarm count     : ↑ worsening     (avg 7.5 per session)
+  Volume alarm count    : ↑ worsening     (avg 23.5 per session)
+
+── Session-by-Session Detail ────────────────────────────────────────────────
+  Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  -----------------------------------------------------------------------------------
+  2025-12-17   140741           0             0           2           216.75   0.013421
+  2025-12-17   192923           0            17          54           231.14   0.055272
+  2025-12-17   194003           0             0          14           200.00   0.059686
+  2025-12-17   194441           0            16          23           227.75   0.040393
+  2025-12-17   194957           0             2           9           204.51   0.041109
+  2025-12-17   195400           0            10          39           230.82   0.044024
+
+================================================================================
+Student: 陳奕揚  (Device ID: 862177071030541)
+================================================================================
+Sessions analysed : 1
+Date range        : 2026-01-26  →  2026-01-26
+
+── Baseline Statistics ──────────────────────────────────────────────────────
+  Pitch  : mean =  286.57 Hz    std =  94.47 Hz
+  Volume : mean =  0.018854    std =  0.064170
+
+── Personalized Alarm Thresholds ────────────────────────────────────────────
+  Pitch  threshold :  475.51 Hz  (= mean + 2.0σ)
+  Volume threshold :  0.115109  (= mean + 1.5σ)
+
+── Longitudinal Trends ──────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per session)
+  Pitch alarm count     : → stable        (avg 6.0 per session)
+  Volume alarm count    : → stable        (avg 62.0 per session)
+
+── Session-by-Session Detail ────────────────────────────────────────────────
+  Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  -----------------------------------------------------------------------------------
+  2026-01-26   075614           0             6          62           286.57   0.018854
+
+================================================================================
+Student: 陳敬謙  (Device ID: 862177071036407)
+================================================================================
+Sessions analysed : 15
+Date range        : 2026-01-21  →  2026-01-29
+
+── Baseline Statistics ──────────────────────────────────────────────────────
+  Pitch  : mean =  254.43 Hz    std =  94.55 Hz
+  Volume : mean =  0.015770    std =  0.030795
+
+── Personalized Alarm Thresholds ────────────────────────────────────────────
+  Pitch  threshold :  443.53 Hz  (= mean + 2.0σ)
+  Volume threshold :  0.061963  (= mean + 1.5σ)
+
+── Longitudinal Trends ──────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per session)
+  Pitch alarm count     : ↑ worsening     (avg 38.4 per session)
+  Volume alarm count    : ↑ worsening     (avg 167.0 per session)
+
+── Session-by-Session Detail ────────────────────────────────────────────────
+  Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  -----------------------------------------------------------------------------------
+  2026-01-21   211253           0             0           9           275.76   0.010258
+  2026-01-21   211607           0            48         157           216.83   0.007391
+  2026-01-22   184501           0            76         444           251.49   0.027360
+  2026-01-22   211057           0            40         108           194.65   0.003780
+  2026-01-23   131212           0             1          47           297.74   0.009253
+  2026-01-23   133155           0             9         133           290.77   0.013053
+  2026-01-23   142316           0             5         207           283.67   0.029426
+  2026-01-23   153141           0             2          19           294.30   0.010278
+  2026-01-24   140129           0            27         196           277.28   0.035426
+  2026-01-24   160951           0            11          56           241.62   0.007089
+  2026-01-24   171536           0             4          63           279.77   0.035616
+  2026-01-25   093017           0           228         737           235.26   0.018621
+  2026-01-25   124910           0            72          95           235.09   0.016820
+  2026-01-29   182932           0            20          87           286.25   0.006643
+  2026-01-29   202137           0            33         147           155.99   0.005530
