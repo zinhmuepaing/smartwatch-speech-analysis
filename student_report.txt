@@ -8,23 +8,29 @@ Sessions analysed : 2
 Date range        : 2026-01-22  →  2026-01-23
 
 ── Baseline Statistics ──────────────────────────────────────────────────────
-  Pitch  : mean =  252.72 Hz    std =  75.95 Hz
-  Volume : mean =  0.015230    std =  0.014861
+  Pitch  : mean =  252.72 Hz    within-session std =  75.95 Hz    between-session std =   0.88 Hz
+  Volume : mean =  0.015230    within-session std =  0.014861    between-session std =  0.001073
 
 ── Personalized Alarm Thresholds ────────────────────────────────────────────
-  Pitch  threshold :  404.62 Hz  (= mean + 2.0σ)
+  Pitch  threshold :  366.64 Hz  (= mean + 1.5σ)
   Volume threshold :  0.037522  (= mean + 1.5σ)
 
-── Longitudinal Trends ──────────────────────────────────────────────────────
-  Polite keyword count  : → stable        (avg 0.0 per session)
-  Pitch alarm count     : ↓ improving     (avg 49.5 per session)
-  Volume alarm count    : ↓ improving     (avg 150.0 per session)
+── Hourly Trends ────────────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per hour)
+  Pitch alarm count     : ↓ improving     (avg 49.5 per hour)
+  Volume alarm count    : ↓ improving     (avg 150.0 per hour)
 
 ── Session-by-Session Detail ────────────────────────────────────────────────
   Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
   -----------------------------------------------------------------------------------
   2026-01-22   155325           0            76         225           252.10   0.015989
   2026-01-23   081753           0            23          75           253.34   0.014472
+
+── Hourly Breakdown ─────────────────────────────────────────────────────────
+  Session            Hour  Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  --------------------------------------------------------------------------------------
+  01-22 155325         H0         0            76         225           252.10   0.015989
+  01-23 081753         H0         0            23          75           253.34   0.014472
 
 ================================================================================
 Student: 何厚智  (Device ID: 862177071070679)
@@ -33,22 +39,27 @@ Sessions analysed : 1
 Date range        : 2026-01-26  →  2026-01-26
 
 ── Baseline Statistics ──────────────────────────────────────────────────────
-  Pitch  : mean =  220.39 Hz    std =  82.78 Hz
-  Volume : mean =  0.078809    std =  0.116998
+  Pitch  : mean =  220.39 Hz    within-session std =  82.78 Hz    between-session std =   0.00 Hz
+  Volume : mean =  0.078809    within-session std =  0.116998    between-session std =  0.000000
 
 ── Personalized Alarm Thresholds ────────────────────────────────────────────
-  Pitch  threshold :  385.95 Hz  (= mean + 2.0σ)
+  Pitch  threshold :  344.56 Hz  (= mean + 1.5σ)
   Volume threshold :  0.254307  (= mean + 1.5σ)
 
-── Longitudinal Trends ──────────────────────────────────────────────────────
-  Polite keyword count  : → stable        (avg 0.0 per session)
-  Pitch alarm count     : → stable        (avg 50.0 per session)
-  Volume alarm count    : → stable        (avg 165.0 per session)
+── Hourly Trends ────────────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per hour)
+  Pitch alarm count     : → stable        (avg 50.0 per hour)
+  Volume alarm count    : → stable        (avg 165.0 per hour)
 
 ── Session-by-Session Detail ────────────────────────────────────────────────
   Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
   -----------------------------------------------------------------------------------
   2026-01-26   202904           0            50         165           220.39   0.078809
+
+── Hourly Breakdown ─────────────────────────────────────────────────────────
+  Session            Hour  Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  --------------------------------------------------------------------------------------
+  01-26 202904         H0         0            50         165           220.39   0.078809
 
 ================================================================================
 Student: 謝知霖  (Device ID: 862177071031192)
@@ -57,17 +68,17 @@ Sessions analysed : 6
 Date range        : 2025-12-17  →  2025-12-17
 
 ── Baseline Statistics ──────────────────────────────────────────────────────
-  Pitch  : mean =  218.50 Hz    std =  76.91 Hz
-  Volume : mean =  0.042318    std =  0.075749
+  Pitch  : mean =  218.50 Hz    within-session std =  76.91 Hz    between-session std =  13.70 Hz
+  Volume : mean =  0.042318    within-session std =  0.075749    between-session std =  0.016202
 
 ── Personalized Alarm Thresholds ────────────────────────────────────────────
-  Pitch  threshold :  372.32 Hz  (= mean + 2.0σ)
+  Pitch  threshold :  333.86 Hz  (= mean + 1.5σ)
   Volume threshold :  0.155941  (= mean + 1.5σ)
 
-── Longitudinal Trends ──────────────────────────────────────────────────────
-  Polite keyword count  : → stable        (avg 0.0 per session)
-  Pitch alarm count     : ↑ worsening     (avg 7.5 per session)
-  Volume alarm count    : ↑ worsening     (avg 23.5 per session)
+── Hourly Trends ────────────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per hour)
+  Pitch alarm count     : ↑ worsening     (avg 7.5 per hour)
+  Volume alarm count    : ↑ worsening     (avg 23.5 per hour)
 
 ── Session-by-Session Detail ────────────────────────────────────────────────
   Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
@@ -79,6 +90,16 @@ Date range        : 2025-12-17  →  2025-12-17
   2025-12-17   194957           0             2           9           204.51   0.041109
   2025-12-17   195400           0            10          39           230.82   0.044024
 
+── Hourly Breakdown ─────────────────────────────────────────────────────────
+  Session            Hour  Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  --------------------------------------------------------------------------------------
+  12-17 140741         H0         0             0           2           216.75   0.013421
+  12-17 192923         H0         0            17          54           231.14   0.055272
+  12-17 194003         H0         0             0          14           200.00   0.059686
+  12-17 194441         H0         0            16          23           227.75   0.040393
+  12-17 194957         H0         0             2           9           204.51   0.041109
+  12-17 195400         H0         0            10          39           230.82   0.044024
+
 ================================================================================
 Student: 陳奕揚  (Device ID: 862177071030541)
 ================================================================================
@@ -86,22 +107,27 @@ Sessions analysed : 1
 Date range        : 2026-01-26  →  2026-01-26
 
 ── Baseline Statistics ──────────────────────────────────────────────────────
-  Pitch  : mean =  286.57 Hz    std =  94.47 Hz
-  Volume : mean =  0.018854    std =  0.064170
+  Pitch  : mean =  286.57 Hz    within-session std =  94.47 Hz    between-session std =   0.00 Hz
+  Volume : mean =  0.018854    within-session std =  0.064170    between-session std =  0.000000
 
 ── Personalized Alarm Thresholds ────────────────────────────────────────────
-  Pitch  threshold :  475.51 Hz  (= mean + 2.0σ)
+  Pitch  threshold :  428.27 Hz  (= mean + 1.5σ)
   Volume threshold :  0.115109  (= mean + 1.5σ)
 
-── Longitudinal Trends ──────────────────────────────────────────────────────
-  Polite keyword count  : → stable        (avg 0.0 per session)
-  Pitch alarm count     : → stable        (avg 6.0 per session)
-  Volume alarm count    : → stable        (avg 62.0 per session)
+── Hourly Trends ────────────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per hour)
+  Pitch alarm count     : → stable        (avg 6.0 per hour)
+  Volume alarm count    : → stable        (avg 62.0 per hour)
 
 ── Session-by-Session Detail ────────────────────────────────────────────────
   Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
   -----------------------------------------------------------------------------------
   2026-01-26   075614           0             6          62           286.57   0.018854
+
+── Hourly Breakdown ─────────────────────────────────────────────────────────
+  Session            Hour  Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  --------------------------------------------------------------------------------------
+  01-26 075614         H0         0             6          62           286.57   0.018854
 
 ================================================================================
 Student: 陳敬謙  (Device ID: 862177071036407)
@@ -110,17 +136,17 @@ Sessions analysed : 15
 Date range        : 2026-01-21  →  2026-01-29
 
 ── Baseline Statistics ──────────────────────────────────────────────────────
-  Pitch  : mean =  254.43 Hz    std =  94.55 Hz
-  Volume : mean =  0.015770    std =  0.030795
+  Pitch  : mean =  254.43 Hz    within-session std =  94.55 Hz    between-session std =  41.29 Hz
+  Volume : mean =  0.015770    within-session std =  0.030795    between-session std =  0.011013
 
 ── Personalized Alarm Thresholds ────────────────────────────────────────────
-  Pitch  threshold :  443.53 Hz  (= mean + 2.0σ)
+  Pitch  threshold :  396.25 Hz  (= mean + 1.5σ)
   Volume threshold :  0.061963  (= mean + 1.5σ)
 
-── Longitudinal Trends ──────────────────────────────────────────────────────
-  Polite keyword count  : → stable        (avg 0.0 per session)
-  Pitch alarm count     : ↑ worsening     (avg 38.4 per session)
-  Volume alarm count    : ↑ worsening     (avg 167.0 per session)
+── Hourly Trends ────────────────────────────────────────────────────────────
+  Polite keyword count  : → stable        (avg 0.0 per hour)
+  Pitch alarm count     : ↑ worsening     (avg 28.8 per hour)
+  Volume alarm count    : ↑ worsening     (avg 125.2 per hour)
 
 ── Session-by-Session Detail ────────────────────────────────────────────────
   Date         Time      Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
@@ -140,3 +166,27 @@ Date range        : 2026-01-21  →  2026-01-29
   2026-01-25   124910           0            72          95           235.09   0.016820
   2026-01-29   182932           0            20          87           286.25   0.006643
   2026-01-29   202137           0            33         147           155.99   0.005530
+
+── Hourly Breakdown ─────────────────────────────────────────────────────────
+  Session            Hour  Keywords  Pitch Alarms  Vol Alarms  Pitch Mean (Hz)   Vol Mean
+  --------------------------------------------------------------------------------------
+  01-21 211253         H0         0             0           9           275.76   0.010258
+  01-21 211607         H0         0            45         134           195.29   0.006920
+  01-21 211607         H1         0             3          23           303.00   0.009272
+  01-22 184501         H0         0            39         261           248.06   0.017556
+  01-22 184501         H1         0            37         183           256.07   0.040431
+  01-22 211057         H0         0            40         108           194.65   0.003780
+  01-23 131212         H0         0             1          47           297.74   0.009253
+  01-23 133155         H0         0             9         133           290.77   0.013053
+  01-23 142316         H0         0             5         207           283.67   0.029426
+  01-23 153141         H0         0             2          19           294.30   0.010278
+  01-24 140129         H0         0            27         196           277.28   0.035426
+  01-24 160951         H0         0            11          56           241.62   0.007089
+  01-24 171536         H0         0             4          63           279.77   0.035616
+  01-25 093017         H0         0            51         201           231.68   0.020416
+  01-25 093017         H1         0            54         245           247.20   0.013515
+  01-25 093017         H2         0           107         234           226.44   0.020664
+  01-25 093017         H3         0            16          57           237.11   0.023701
+  01-25 124910         H0         0            72          95           235.09   0.016820
+  01-29 182932         H0         0            20          87           286.25   0.006643
+  01-29 202137         H0         0            33         147           155.99   0.005530

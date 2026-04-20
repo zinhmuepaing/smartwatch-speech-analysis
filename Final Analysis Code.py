@@ -32,8 +32,11 @@ HOP_LENGTH = 512
 ANOMALY_WINDOW_SECONDS = 1.0
 
 # Z-score thresholds for anomaly detection.
-# Values above these thresholds are considered statistically unusual.
-PITCH_Z_THRESHOLD = 2.0
+# At Z = 1.5 (one-tailed), ~6.68% of normally-distributed values are expected
+# to exceed this threshold by chance — i.e., the threshold sits at the 93rd
+# percentile. For comparison: Z = 2.0 → ~2.28%; Z = 1.96 → ~2.5%.
+# Using 1.5 makes detection more sensitive, appropriate for mild speech anomalies.
+PITCH_Z_THRESHOLD = 1.5
 VOLUME_Z_THRESHOLD = 1.5
 
 # Keywords to search for in subtitles

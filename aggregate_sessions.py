@@ -53,8 +53,10 @@ DEVICE_TO_NAME = {
 # Slope magnitude below which a trend is labelled "stable"
 STABLE_SLOPE_THRESHOLD = 0.1
 
-# Z-score multipliers used to derive personalized thresholds
-PITCH_Z_THRESHOLD = 2.0
+# Z-score multipliers used to derive personalized thresholds.
+# At Z = 1.5 (one-tailed), ~6.68% of normally-distributed values exceed the
+# threshold by chance (93rd percentile). Z = 2.0 → ~2.28%; Z = 1.96 → ~2.5%.
+PITCH_Z_THRESHOLD = 1.5
 VOLUME_Z_THRESHOLD = 1.5
 
 
@@ -247,6 +249,69 @@ def build_session_table(data_dirs: list[Path]) -> pd.DataFrame:
     return df
 
 
+def build_chunk_table(data_dirs: list[Path]) -> pd.DataFrame:
+    """
+    Parse all _analysis.txt files and return a DataFrame with one row per chunk.
+    Adds chunk_index and hour_index columns for hourly aggregation.
+    """
+    sessions = discover_sessions(data_dirs)
+    rows = []
+    for s in sessions:
+        chunks = parse_analysis_txt(s["txt_path"])
+        if not chunks:
+            print(f"  [warn] no chunks parsed from {s['txt_path'].name}")
+            continue
+        for i, chunk in enumerate(chunks):
+            row = {
+                "student_id":   s["student_id"],
+                "student_name": s["student_name"],
+                "session_id":   s["session_id"],
+                "session_date": s["session_date"],
+                "data_source":  s["data_source"],
+                "chunk_index":  i,
+                "hour_index":   i // 4,
+            }
+            row.update(chunk)
+            rows.append(row)
+    df = pd.DataFrame(rows).sort_values(
+        ["student_id", "session_date", "chunk_index"]
+    ).reset_index(drop=True)
+    print(f"Found {len(df)} total chunks across all sessions.")
+    return df
+
+
+def build_hourly_table(chunk_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aggregate chunk-level data to hourly granularity.
+    Adds cumulative_hour column for cross-session time-series analysis.
+    """
+    if chunk_df.empty:
+        return pd.DataFrame()
+    hourly = (
+        chunk_df
+        .groupby(
+            ["student_id", "student_name", "session_id", "session_date",
+             "data_source", "hour_index"],
+            sort=False,
+        )
+        .agg(
+            chunk_count=("chunk_index", "count"),
+            keyword_count=("keyword_count", "sum"),
+            pitch_alarm_count=("pitch_alarm_count", "sum"),
+            volume_alarm_count=("volume_alarm_count", "sum"),
+            pitch_mean=("pitch_mean", "mean"),
+            pitch_std=("pitch_std", "mean"),
+            volume_mean=("rms_mean", "mean"),
+            volume_std=("rms_std", "mean"),
+        )
+        .reset_index()
+        .sort_values(["student_id", "session_date", "session_id", "hour_index"])
+        .reset_index(drop=True)
+    )
+    hourly["cumulative_hour"] = hourly.groupby("student_id").cumcount()
+    return hourly
+
+
 # =============================================================================
 # STUDENT BASELINES
 # =============================================================================
@@ -331,6 +396,33 @@ def analyze_trends(df: pd.DataFrame) -> dict:
     return trends
 
 
+def analyze_hourly_trends(hourly_df: pd.DataFrame) -> dict:
+    """
+    Per student, fit a linear trend over hours sorted by cumulative_hour.
+    Returns dict: student_id → {metric: (slope, label)}
+    """
+    trends = {}
+    metrics = ["keyword_count", "pitch_alarm_count", "volume_alarm_count"]
+
+    for student_id, grp in hourly_df.groupby("student_id"):
+        grp_sorted = grp.sort_values("cumulative_hour")
+        n = len(grp_sorted)
+        x = grp_sorted["cumulative_hour"].values.astype(float)
+        student_trends = {}
+
+        for metric in metrics:
+            y = grp_sorted[metric].values.astype(float)
+            if n < 2 or np.all(y == y[0]):
+                slope = 0.0
+            else:
+                slope = float(np.polyfit(x, y, 1)[0])
+            student_trends[metric] = (slope, _label_trend(slope, metric))
+
+        trends[student_id] = student_trends
+
+    return trends
+
+
 # =============================================================================
 # REPORT GENERATION
 # =============================================================================
@@ -347,8 +439,9 @@ def _student_text_section(
     student_id: str,
     student_name: str,
     sessions: pd.DataFrame,
+    hourly: pd.DataFrame,
     baseline: pd.Series,
-    trends: dict,
+    hourly_trends: dict,
 ) -> str:
     lines = []
     lines.append(f"{'='*80}")
@@ -380,17 +473,17 @@ def _student_text_section(
                  f"(= mean + {VOLUME_Z_THRESHOLD}σ)")
     lines.append("")
 
-    t = trends.get(student_id, {})
-    lines.append("── Longitudinal Trends ──────────────────────────────────────────────────────")
-    kw_avg = sessions["keyword_count"].mean()
-    pa_avg = sessions["pitch_alarm_count"].mean()
-    va_avg = sessions["volume_alarm_count"].mean()
+    t = hourly_trends.get(student_id, {})
+    lines.append("── Hourly Trends ────────────────────────────────────────────────────────────")
+    kw_avg = hourly["keyword_count"].mean()
+    pa_avg = hourly["pitch_alarm_count"].mean()
+    va_avg = hourly["volume_alarm_count"].mean()
     kw_label  = t.get("keyword_count",    (0, "→ stable"))[1]
     pa_label  = t.get("pitch_alarm_count", (0, "→ stable"))[1]
     va_label  = t.get("volume_alarm_count", (0, "→ stable"))[1]
-    lines.append(f"  Polite keyword count  : {kw_label:<14}  (avg {kw_avg:.1f} per session)")
-    lines.append(f"  Pitch alarm count     : {pa_label:<14}  (avg {pa_avg:.1f} per session)")
-    lines.append(f"  Volume alarm count    : {va_label:<14}  (avg {va_avg:.1f} per session)")
+    lines.append(f"  Polite keyword count  : {kw_label:<14}  (avg {kw_avg:.1f} per hour)")
+    lines.append(f"  Pitch alarm count     : {pa_label:<14}  (avg {pa_avg:.1f} per hour)")
+    lines.append(f"  Volume alarm count    : {va_label:<14}  (avg {va_avg:.1f} per hour)")
     lines.append("")
 
     lines.append("── Session-by-Session Detail ────────────────────────────────────────────────")
@@ -408,6 +501,31 @@ def _student_text_section(
             f"{row['volume_mean']:>10.6f}"
         )
     lines.append("")
+
+    lines.append("── Hourly Breakdown ─────────────────────────────────────────────────────────")
+    hourly_header = (
+        f"  {'Session':<17} {'Hour':>5} {'Keywords':>9} "
+        f"{'Pitch Alarms':>13} {'Vol Alarms':>11} "
+        f"{'Pitch Mean (Hz)':>16} {'Vol Mean':>10}"
+    )
+    hourly_sep = "  " + "-" * 86
+    lines.append(hourly_header)
+    lines.append(hourly_sep)
+    for _, row in hourly.sort_values(["session_date", "session_id", "hour_index"]).iterrows():
+        sess_label = (
+            row["session_date"].strftime("%m-%d")
+            + " " + row["session_id"].split("_")[1]
+        )
+        hour_label = f"H{int(row['hour_index'])}"
+        lines.append(
+            f"  {sess_label:<17} {hour_label:>5} "
+            f"{int(row['keyword_count']):>9} "
+            f"{int(row['pitch_alarm_count']):>13} "
+            f"{int(row['volume_alarm_count']):>11} "
+            f"{row['pitch_mean']:>16.2f} "
+            f"{row['volume_mean']:>10.6f}"
+        )
+    lines.append("")
     return "\n".join(lines)
 
 
@@ -415,24 +533,28 @@ def _student_pdf_page(
     ax_kw, ax_pitch, ax_vol,
     student_name: str,
     student_id: str,
-    sessions: pd.DataFrame,
+    hourly: pd.DataFrame,
 ) -> None:
-    """Fill three axes with session-level trend charts for one student."""
-    grp = sessions.sort_values("session_date").reset_index(drop=True)
+    """Fill three axes with hourly trend charts for one student."""
+    grp = hourly.sort_values("cumulative_hour").reset_index(drop=True)
     x = np.arange(len(grp))
-    dates = [d.strftime("%m-%d") for d in grp["session_date"]]
+    hour_labels = [f"H{int(row['cumulative_hour'])}" for _, row in grp.iterrows()]
+
+    session_starts = grp.groupby("session_id")["cumulative_hour"].min().sort_values().values
+    boundary_xs = [i for i, h in enumerate(grp["cumulative_hour"].values) if h in session_starts[1:]]
 
     def _plot(ax, y_col, colour, ylabel, title):
         y = grp[y_col].values
         ax.plot(x, y, marker="o", color=colour, linewidth=1.5)
         ax.set_xticks(x)
-        ax.set_xticklabels(dates, rotation=45, ha="right", fontsize=7)
+        ax.set_xticklabels(hour_labels, rotation=45, ha="right", fontsize=7)
         ax.set_ylabel(ylabel, fontsize=8)
         ax.set_title(title, fontsize=9, pad=4)
         ax.grid(axis="y", linestyle="--", alpha=0.4)
-        # trend line
+        for bx in boundary_xs:
+            ax.axvline(x=bx - 0.5, color="steelblue", linestyle=":", linewidth=0.8, alpha=0.5)
         if len(x) >= 2:
-            slope, intercept = np.polyfit(x, y.astype(float), 1)
+            slope, intercept = np.polyfit(x.astype(float), y.astype(float), 1)
             ax.plot(x, slope * x + intercept, linestyle="--", color="gray",
                     linewidth=1, alpha=0.7)
 
@@ -448,8 +570,9 @@ def _student_pdf_page(
 
 def generate_report(
     df: pd.DataFrame,
+    hourly_df: pd.DataFrame,
     baselines: pd.DataFrame,
-    trends: dict,
+    hourly_trends: dict,
     txt_path: Path,
     pdf_path: Path,
 ) -> None:
@@ -464,17 +587,18 @@ def generate_report(
             sid  = bl_row["student_id"]
             name = bl_row["student_name"]
             stu_sessions = df[df["student_id"] == sid].copy()
+            stu_hourly = hourly_df[hourly_df["student_id"] == sid].copy()
 
             # ── text section ─────────────────────────────────────────────
             txt_sections.append(
-                _student_text_section(sid, name, stu_sessions, bl_row, trends)
+                _student_text_section(sid, name, stu_sessions, stu_hourly, bl_row, hourly_trends)
             )
 
             # ── PDF page ─────────────────────────────────────────────────
             fig, (ax_kw, ax_pitch, ax_vol) = plt.subplots(
                 3, 1, figsize=(10, 8), constrained_layout=True
             )
-            _student_pdf_page(ax_kw, ax_pitch, ax_vol, name, sid, stu_sessions)
+            _student_pdf_page(ax_kw, ax_pitch, ax_vol, name, sid, stu_hourly)
             pdf.savefig(fig)
             plt.close(fig)
 
@@ -494,17 +618,25 @@ def main():
 
     csv_path = BASE_DIR / "session_summary.csv"
     df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-    print(f"[OK] Session summary -> {csv_path}\n")
+    print(f"[OK] Session summary  -> {csv_path}\n")
+
+    print("Building hourly table...")
+    chunk_df = build_chunk_table(DATA_DIRS)
+    hourly_df = build_hourly_table(chunk_df)
+
+    hourly_csv_path = BASE_DIR / "session_hourly.csv"
+    hourly_df.to_csv(hourly_csv_path, index=False, encoding="utf-8-sig")
+    print(f"[OK] Hourly summary   -> {hourly_csv_path}\n")
 
     print("Computing student baselines...")
     baselines = compute_student_baselines(df)
 
-    print("Analysing longitudinal trends...")
-    trends = analyze_trends(df)
+    print("Analysing hourly trends...")
+    hourly_trends = analyze_hourly_trends(hourly_df)
 
     print("Generating reports...")
     generate_report(
-        df, baselines, trends,
+        df, hourly_df, baselines, hourly_trends,
         txt_path=BASE_DIR / "student_report.txt",
         pdf_path=BASE_DIR / "student_report.pdf",
     )
